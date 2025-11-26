@@ -1,0 +1,32 @@
+# Groq Deployment Configuration for Websocketz-4-Life
+
+[env]
+NODE_ENV = "production"
+PORT = 3000
+
+[build]
+# Groq will automatically detect Node.js from package.json
+framework = "nodejs"
+
+[deploy]
+# Start command
+start = "npm start"
+
+# Health check
+healthcheck = "http://localhost:3000/health"
+healthcheckInterval = 30
+healthcheckTimeout = 5
+
+# Restart policy
+restartPolicy = "always"
+maxRetries = 3
+
+# Resource allocation
+memory = "512Mi"
+cpu = "250m"
+
+# Scaling (optional)
+minInstances = 1
+maxInstances = 4
+targetCPU = 80
+targetMemory = 80

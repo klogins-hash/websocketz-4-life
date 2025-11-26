@@ -1,6 +1,6 @@
 # Websocketz-4-Life 🎙️
 
-A production-ready voice agent service optimized for Twilio TwiML integration. This application handles incoming calls, processes user input (speech and DTMF), and manages voice interactions with intelligent routing.
+A production-ready voice agent service optimized for Twilio TwiML integration and Groq infrastructure. This application handles incoming calls, processes user input (speech and DTMF), and manages voice interactions with intelligent routing powered by Groq's fast LLM inference.
 
 ## Features
 
@@ -39,7 +39,7 @@ A production-ready voice agent service optimized for Twilio TwiML integration. T
 ### 1. Prerequisites
 - Node.js 16+ installed
 - Twilio account (https://www.twilio.com)
-- Railway account (https://railway.app)
+- Groq account (https://groq.com)
 
 ### 2. Environment Variables
 
@@ -59,11 +59,12 @@ TWILIO_ACCOUNT_SID=your_account_sid
 TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_PHONE_NUMBER=+1234567890
 
-# Optional: OpenAI integration for AI responses
-OPENAI_API_KEY=your_openai_key
+# Get these from your Groq Console (https://console.groq.com)
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=mixtral-8x7b-32768
 
 # Your deployed URL
-WEBHOOK_URL=https://websocketz-4-life.railway.app
+WEBHOOK_URL=https://your-groq-deployment.groq.app
 ```
 
 ### 3. Local Development
@@ -78,19 +79,24 @@ npm run dev
 
 The server will run on `http://localhost:3000`
 
-### 4. Deployment to Railway
+### 4. Deployment to Groq
 
-The project is already linked to Railway. To deploy:
+Deploy your voice agent to Groq infrastructure:
 
 ```bash
-# Push to git (Railway auto-deploys)
-git add .
-git commit -m "Initial voice agent setup"
-git push origin main
+# Ensure you're logged into Groq
+groq login
 
-# Or use Railway CLI directly
-railway deploy
+# Deploy using Groq CLI
+groq deploy --config groq.toml
+
+# Or push to git and deploy through Groq dashboard
+git add .
+git commit -m "Deploy voice agent to Groq"
+git push origin master
 ```
+
+Visit https://console.groq.com to manage your deployment.
 
 ## API Endpoints
 
