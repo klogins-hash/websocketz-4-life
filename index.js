@@ -5,7 +5,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// Railway sets PORT automatically, fall back to 3000 for local dev
+const PORT = parseInt(process.env.PORT || '3000', 10);
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Configuration for AI models and Twilio
 const config = {
