@@ -1,3 +1,0 @@
-[deploy]
-startCommand = "npm start"
-restartPolicyMaxRetries = 5
