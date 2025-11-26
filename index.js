@@ -7,17 +7,25 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Configuration for AI models
+// Configuration for AI models and Twilio
 const config = {
+  // Twilio Configuration
+  twilio: {
+    accountSid: process.env.TWILIO_ACCOUNT_SID,
+    authToken: process.env.TWILIO_AUTH_TOKEN,
+    apiSid: process.env.TWILIO_API_SID,
+    apiSecret: process.env.TWILIO_API_SECRET,
+    phoneNumber: process.env.TWILIO_PHONE_NUMBER,
+  },
   // Groq Kimi k2-0905 - Ultra-fast reasoning LLM
   groq: {
     apiKey: process.env.GROQ_API_KEY,
     model: process.env.GROQ_MODEL || 'kimi-k2-0905',
   },
-  // Cartesia Sonic 3 - High-quality voice synthesis
+  // Cartesia Sonic Ultra - High-quality voice synthesis
   cartesia: {
     apiKey: process.env.CARTESIA_API_KEY,
-    model: process.env.CARTESIA_VOICE_MODEL || 'sonic-3',
+    model: process.env.CARTESIA_VOICE_MODEL || 'sonic-ultra',
     voiceId: process.env.CARTESIA_VOICE_ID || 'default',
   },
   // Ink Whisper - Advanced speech recognition
