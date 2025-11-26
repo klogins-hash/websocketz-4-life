@@ -49,7 +49,7 @@ async function configurePhoneNumber() {
 
     // Use the first number (or you can prompt for selection)
     const phoneNumber = incomingPhoneNumbers[0];
-    const voiceUrl = `${DEPLOYMENT_URL}/voice/incoming`;
+    const voiceUrl = `${DEPLOYMENT_URL}/voice/media-stream`;
     const statusCallbackUrl = `${DEPLOYMENT_URL}/voice/status-callback`;
 
     console.log(`\n📞 Configuring phone number: ${phoneNumber.friendlyName} (${phoneNumber.phoneNumber})\n`);
