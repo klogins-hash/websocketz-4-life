@@ -10,6 +10,7 @@ RUN npm ci --only=production
 
 # Copy application code
 COPY index.js ./
+COPY index-websocket.js ./
 COPY .env ./
 
 # Expose port
