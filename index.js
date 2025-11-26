@@ -7,15 +7,120 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Configuration for AI models
+const config = {
+  // Groq Kimi k2-0905 - Ultra-fast reasoning LLM
+  groq: {
+    apiKey: process.env.GROQ_API_KEY,
+    model: process.env.GROQ_MODEL || 'kimi-k2-0905',
+  },
+  // Cartesia Sonic 3 - High-quality voice synthesis
+  cartesia: {
+    apiKey: process.env.CARTESIA_API_KEY,
+    model: process.env.CARTESIA_VOICE_MODEL || 'sonic-3',
+    voiceId: process.env.CARTESIA_VOICE_ID || 'default',
+  },
+  // Ink Whisper - Advanced speech recognition
+  inkWhisper: {
+    apiKey: process.env.INK_WHISPER_API_KEY,
+    model: process.env.INK_WHISPER_MODEL || 'ink-whisper-pro',
+  },
+};
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// AI Model Helpers
+class AIModelManager {
+  // Generate response using Groq Kimi k2-0905
+  async generateWithKimi(userInput) {
+    if (!config.groq.apiKey) {
+      console.warn('Groq API key not configured');
+      return null;
+    }
+    try {
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.groq.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: config.groq.model,
+          messages: [{ role: 'user', content: userInput }],
+          temperature: 0.7,
+          max_tokens: 1024,
+        }),
+      });
+      const data = await response.json();
+      return data.choices?.[0]?.message?.content || null;
+    } catch (error) {
+      console.error('Groq Kimi error:', error);
+      return null;
+    }
+  }
+
+  // Synthesize voice using Cartesia Sonic 3
+  async synthesizeWithSonic3(text) {
+    if (!config.cartesia.apiKey) {
+      console.warn('Cartesia API key not configured');
+      return null;
+    }
+    try {
+      const response = await fetch('https://api.cartesia.ai/v1/voices/synthesize', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.cartesia.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text,
+          model: config.cartesia.model,
+          voice_id: config.cartesia.voiceId,
+          output_format: 'mp3',
+        }),
+      });
+      return response;
+    } catch (error) {
+      console.error('Cartesia Sonic 3 error:', error);
+      return null;
+    }
+  }
+
+  // Transcribe speech using Ink Whisper
+  async transcribeWithInkWhisper(audioData) {
+    if (!config.inkWhisper.apiKey) {
+      console.warn('Ink Whisper API key not configured');
+      return null;
+    }
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioData);
+      formData.append('model', config.inkWhisper.model);
+
+      const response = await fetch('https://api.inkwhisper.ai/v1/transcribe', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${config.inkWhisper.apiKey}`,
+        },
+        body: formData,
+      });
+      const data = await response.json();
+      return data.text || null;
+    } catch (error) {
+      console.error('Ink Whisper error:', error);
+      return null;
+    }
+  }
+}
+
 // Voice Agent Handler
 class VoiceAgent {
   constructor() {
     this.callSessions = new Map();
+    this.aiManager = new AIModelManager();
   }
 
   generateTwiML(callSid, speechResult = null) {
