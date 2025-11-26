@@ -202,8 +202,10 @@ app.post('/voice/incoming', (req, res) => {
   voiceAgent.handleIncoming(CallSid, From, To);
 
   const twiml = voiceAgent.generateTwiML(CallSid);
-  res.type('text/xml');
-  res.send(twiml.toString());
+
+  // Set proper content type and return TwiML as per Twilio documentation
+  res.setHeader('Content-Type', 'text/xml');
+  res.status(200).send(twiml.toString());
 });
 
 // Handle user input (speech or DTMF)
@@ -223,8 +225,10 @@ app.post('/voice/handle-input', (req, res) => {
   }
 
   twiml.hangup();
-  res.type('text/xml');
-  res.send(twiml.toString());
+
+  // Set proper content type and return TwiML as per Twilio documentation
+  res.setHeader('Content-Type', 'text/xml');
+  res.status(200).send(twiml.toString());
 });
 
 // End call handler
@@ -239,8 +243,9 @@ app.post('/voice/end-call', (req, res) => {
   twiml.say('Thank you for calling. Goodbye!', { voice: 'Polly.Amy' });
   twiml.hangup();
 
-  res.type('text/xml');
-  res.send(twiml.toString());
+  // Set proper content type and return TwiML as per Twilio documentation
+  res.setHeader('Content-Type', 'text/xml');
+  res.status(200).send(twiml.toString());
 });
 
 // Status callback for call completion
